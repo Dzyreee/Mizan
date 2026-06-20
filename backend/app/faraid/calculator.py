@@ -50,12 +50,21 @@ class Heirs:
 
 @dataclass
 class Share:
-    """A heir class's allocation. `fraction` is the class total; `each` is per individual."""
+    """A heir class's allocation. `fraction` is the class total; `each` is per individual.
+
+    `basis` says HOW the share arose, which the verifier uses to decide what is independently
+    checkable against the Islamic ruling:
+      "fard"    — a fixed Quranic share (Sadiq states it reliably; hard-checked)
+      "residue" — agnatic residue / ta'sib arithmetic (deterministic engine owns it)
+      "awl"     — proportionally reduced ('awl)
+      "radd"    — proportionally increased (radd)
+    """
 
     heir: str
     count: int
     fraction: Fraction
     each: Fraction
+    basis: str = "fard"
 
     def as_ratio(self, base: int) -> str:
         return f"{int(self.fraction * base)}/{base}"
@@ -84,6 +93,7 @@ class Distribution:
                     "fraction": str(s.fraction),
                     "each": str(s.each),
                     "ratio": s.as_ratio(self.base),
+                    "basis": s.basis,
                 }
                 for s in self.shares
             ],
@@ -113,18 +123,21 @@ def compute_inheritance(heirs: Heirs) -> Distribution:
     has_male_desc = heirs.sons > 0
 
     fixed: Dict[str, Fraction] = {}
+    basis: Dict[str, str] = {}   # heir -> "fard" | "residue" | "awl" | "radd"
     note: Optional[str] = None
 
-    # --- spouse ---
+    # --- spouse (always a fixed Quranic share) ---
     spouse_share = ZERO
     if heirs.husband:
         spouse_share = Fraction(1, 4) if has_desc else Fraction(1, 2)
         fixed["husband"] = spouse_share
+        basis["husband"] = "fard"
     elif heirs.wives > 0:
         spouse_share = Fraction(1, 8) if has_desc else Fraction(1, 4)
         fixed["wife"] = spouse_share
+        basis["wife"] = "fard"
 
-    # --- mother ---
+    # --- mother (fixed) ---
     is_umar = heirs.mother and heirs.father and spouse_share > 0 and not has_desc
     if heirs.mother:
         if is_umar:
@@ -135,22 +148,26 @@ def compute_inheritance(heirs: Heirs) -> Distribution:
             fixed["mother"] = Fraction(1, 6)
         else:
             fixed["mother"] = Fraction(1, 3)
+        basis["mother"] = "fard"
 
-    # --- daughters as Quranic sharers (only when there is no son) ---
+    # --- daughters as Quranic sharers (fixed; only when there is no son) ---
     if heirs.daughters > 0 and heirs.sons == 0:
         fixed["daughter"] = Fraction(1, 2) if heirs.daughters == 1 else Fraction(2, 3)
+        basis["daughter"] = "fard"
 
     # --- father takes a fixed 1/6 whenever a descendant exists ---
     if heirs.father and has_desc:
         fixed["father"] = Fraction(1, 6)
+        basis["father"] = "fard"
 
     total_fixed = sum(fixed.values(), ZERO)
 
     # --- 'AWL: fixed shares exceed the estate -> reduce all proportionally ---
     if total_fixed > ONE:
         scaled = {k: v / total_fixed for k, v in fixed.items()}
+        awl_basis = {k: "awl" for k in scaled}
         return _finalize(
-            heirs, scaled, "awl",
+            heirs, scaled, awl_basis, "awl",
             "'Awl: fixed shares exceed unity; every share is reduced proportionally.",
         )
 
@@ -160,11 +177,12 @@ def compute_inheritance(heirs: Heirs) -> Distribution:
 
     # --- assign residue to the nearest agnate (asaba) ---
     if heirs.sons > 0:
-        shares["children_residue"] = residue  # split 2:1 in _finalize
+        shares["children_residue"] = residue  # split 2:1 in _finalize (basis "residue")
         residue = ZERO
     elif heirs.father:
-        # father is the agnate: his fixed 1/6 (if any) plus the residue
+        # father is the agnate: his fixed 1/6 (if any) plus the residue -> residuary
         shares["father"] = shares.get("father", ZERO) + residue
+        basis["father"] = "residue"
         residue = ZERO
 
     # --- RADD: leftover with no agnate -> return to non-spouse sharers ---
@@ -177,26 +195,27 @@ def compute_inheritance(heirs: Heirs) -> Distribution:
             remaining = ONE - spouse_share
             for k in non_spouse:
                 shares[k] = non_spouse[k] / denom * remaining
+                basis[k] = "radd"
             kind = "radd"
             note = "Radd: the surplus is returned proportionally to the non-spouse sharers."
 
-    return _finalize(heirs, shares, kind, note)
+    return _finalize(heirs, shares, basis, kind, note)
 
 
-def _finalize(heirs: Heirs, class_shares: Dict[str, Fraction], kind: str,
-              note: Optional[str]) -> Distribution:
+def _finalize(heirs: Heirs, class_shares: Dict[str, Fraction], basis: Dict[str, str],
+              kind: str, note: Optional[str]) -> Distribution:
     class_shares = dict(class_shares)
     out: List[Share] = []
 
-    # children take the residue together, 2:1 male:female
+    # children take the residue together, 2:1 male:female (residuary basis)
     if "children_residue" in class_shares:
         total = class_shares.pop("children_residue")
         units = heirs.sons * 2 + heirs.daughters
         unit = total / units
         if heirs.sons:
-            out.append(Share("son", heirs.sons, unit * 2 * heirs.sons, unit * 2))
+            out.append(Share("son", heirs.sons, unit * 2 * heirs.sons, unit * 2, "residue"))
         if heirs.daughters:
-            out.append(Share("daughter", heirs.daughters, unit * heirs.daughters, unit))
+            out.append(Share("daughter", heirs.daughters, unit * heirs.daughters, unit, "residue"))
 
     counts = {
         "husband": 1, "wife": heirs.wives, "son": heirs.sons,
@@ -204,7 +223,7 @@ def _finalize(heirs: Heirs, class_shares: Dict[str, Fraction], kind: str,
     }
     for key, frac in class_shares.items():
         c = counts[key]
-        out.append(Share(key, c, frac, frac / c))
+        out.append(Share(key, c, frac, frac / c, basis.get(key, "fard")))
 
     out.sort(key=lambda s: _ORDER[s.heir])
 

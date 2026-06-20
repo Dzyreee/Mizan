@@ -35,3 +35,6 @@ backend/smoke/_out/
 .idea/
 .vscode/
 *.swp
+
+# Playwright MCP artifacts
+.playwright-mcp/

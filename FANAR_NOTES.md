@@ -102,3 +102,13 @@ are KB-scale. Image regeneration is the only thing to watch when iterating.
    inheritance wording, overriding format instructions — a real risk for a faraid app; we
    isolate deterministic extraction from the ruling call to avoid it.
 6. Citations are **inline tags**, not structured fields — needs parsing.
+7. **Content-safety filter blocks share COMPUTATION** (400 `content_filter`, `param:response`)
+   when a base chat model is asked to compute inheritance shares — even with neutral wording.
+   Reading/EXTRACTING shares from text is fine. → verifier must read Sadiq's stated shares,
+   not compute its own; computation stays in the deterministic engine.
+8. **Islamic-RAG gender bias:** for "a woman died leaving a husband", the ruling defaulted to
+   the common "man leaves a wife" framing and assigned a *wife* a share. Our verifier caught it
+   (flagged a heir the calculator doesn't have) — a live demonstration of the verifier's value.
+9. **'awl/radd shares are not LLM-verifiable.** Only fixed (fard) shares can be reconciled
+   against the ruling; the proportional 'awl/radd arithmetic is owned solely by the unit-tested
+   deterministic engine. The verifier hard-checks fard, treats residue/'awl/radd as informational.
