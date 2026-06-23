@@ -38,3 +38,6 @@ backend/smoke/_out/
 
 # Playwright MCP artifacts
 .playwright-mcp/
+
+# Local Claude Code skills (not shared)
+.claude/skills/
