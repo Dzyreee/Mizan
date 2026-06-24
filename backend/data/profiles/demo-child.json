@@ -1,0 +1,83 @@
+{
+  "child_id": "demo-child",
+  "name": "ليان",
+  "created_at": "2026-06-24",
+  "sessions": [
+    {
+      "date": "2026-06-10",
+      "target_text": "صعد الصقر فوق الصخرة ورأى البحر",
+      "transcript": "سعد السقر فوق الصخرة وراء البحر",
+      "accuracy_pct": 50.0,
+      "wpm": 10.0,
+      "miscue_counts": {
+        "substitution": 3
+      },
+      "weak_sounds": [
+        "ص",
+        "ر"
+      ],
+      "per_sound": {
+        "ص": {
+          "accuracy": 33.3,
+          "n_words": 3,
+          "n_correct": 1
+        },
+        "ر": {
+          "accuracy": 50.0,
+          "n_words": 4,
+          "n_correct": 2
+        }
+      }
+    },
+    {
+      "date": "2026-06-17",
+      "target_text": "صعد الصقر فوق الصخرة ورأى البحر",
+      "transcript": "صعد السقر فوق الصخرة ورأى البحر",
+      "accuracy_pct": 83.3,
+      "wpm": 12.0,
+      "miscue_counts": {
+        "substitution": 1
+      },
+      "weak_sounds": [
+        "ص",
+        "ر"
+      ],
+      "per_sound": {
+        "ص": {
+          "accuracy": 66.7,
+          "n_words": 3,
+          "n_correct": 2
+        },
+        "ر": {
+          "accuracy": 75.0,
+          "n_words": 4,
+          "n_correct": 3
+        }
+      }
+    },
+    {
+      "date": "2026-06-24",
+      "target_text": "صعد الصقر فوق الصخرة ورأى البحر",
+      "transcript": "صعد الصقر فوق الصخرة ورأى البحر",
+      "accuracy_pct": 100.0,
+      "wpm": 15.0,
+      "miscue_counts": {},
+      "weak_sounds": [
+        "ص",
+        "ر"
+      ],
+      "per_sound": {
+        "ص": {
+          "accuracy": 100.0,
+          "n_words": 3,
+          "n_correct": 3
+        },
+        "ر": {
+          "accuracy": 100.0,
+          "n_words": 4,
+          "n_correct": 4
+        }
+      }
+    }
+  ]
+}
