@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Baloo Bhaijaan 2";
+  --font-body: "Tajawal";
+}
+
+@layer base {
+  body {
+    @apply bg-canvas text-ink font-body antialiased;
+    background-image:
+      radial-gradient(60rem 60rem at 110% -10%, rgba(129, 140, 248, 0.18), transparent 60%),
+      radial-gradient(50rem 50rem at -10% 0%, rgba(249, 115, 22, 0.1), transparent 55%);
+    background-attachment: fixed;
+  }
+  h1, h2, h3 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-3xl bg-white/90 backdrop-blur shadow-soft border border-indigo-100/70;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  /* Mono for model IDs / latency so Latin reads cleanly inside RTL. */
+  .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
