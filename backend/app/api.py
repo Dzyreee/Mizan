@@ -10,7 +10,9 @@ from typing import Optional
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
+from app.agent.adapt import adapt
 from app.agent.assess import assess
 
 app = FastAPI(title="Naghami API",
@@ -62,3 +64,23 @@ async def assess_endpoint(
     finally:
         if audio_path and os.path.exists(audio_path):
             os.remove(audio_path)
+
+
+class AdaptRequest(BaseModel):
+    diagnosis: dict
+    include_image: bool = True
+    include_audio: bool = True
+
+
+@app.post("/adapt")
+def adapt_endpoint(req: AdaptRequest):
+    """Generate a targeted exercise from a diagnosis (the `diagnosis` object returned by
+    /assess). Returns the plan, generated media (verse + base64 illustration + base64
+    pronunciation audio), and the trace."""
+    if not req.diagnosis:
+        raise HTTPException(status_code=400, detail="Provide a 'diagnosis' object.")
+    try:
+        return adapt(req.diagnosis, include_image=req.include_image,
+                     include_audio=req.include_audio)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail=f"Adapt failed: {exc}")

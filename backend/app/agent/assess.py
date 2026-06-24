@@ -22,16 +22,18 @@ def assess(
     duration_sec: Optional[float] = None,
     word_timestamps: Optional[Sequence[dict]] = None,
     do_diagnose: bool = True,
+    trace: Optional[Trace] = None,
 ) -> dict:
     """Run the assess+diagnose pipeline.
 
     Provide EITHER `audio_path` (real flow: Aura STT transcribes) OR `transcript`
-    (test/offline flow: skip STT). Returns target/transcript/error_map/diagnosis/trace.
+    (test/offline flow: skip STT). Pass a shared `trace` to compose with adapt() into
+    one continuous loop. Returns target/transcript/error_map/diagnosis/trace.
     """
     if transcript is None and audio_path is None:
         raise ValueError("assess() needs either audio_path or transcript")
 
-    trace = Trace()
+    trace = trace or Trace()
 
     # 1) Transcribe (Aura STT) — skipped when a transcript is supplied directly.
     if transcript is None:
