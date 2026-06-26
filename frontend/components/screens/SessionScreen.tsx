@@ -89,7 +89,7 @@ export function SessionScreen() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-md px-5 pb-10 pt-6 md:max-w-3xl">
+    <div className="mx-auto w-full max-w-md px-5 pb-10 pt-6 md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
       {/* header */}
       <div className="flex items-center justify-between gap-2">
         <button

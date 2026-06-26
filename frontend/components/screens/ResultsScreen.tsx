@@ -35,7 +35,7 @@ export function ResultsScreen() {
   if (!assess || !em) return null;
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center px-5 pb-8 pt-10 text-center md:max-w-lg">
+    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center px-5 pb-8 pt-10 text-center md:max-w-xl lg:max-w-2xl">
       <Mascot size={132} mood={good ? "cheer" : "happy"} />
 
       <motion.h1

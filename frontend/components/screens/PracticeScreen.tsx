@@ -10,15 +10,17 @@ import { MusicIcon, SpinnerIcon, VolumeIcon, XIcon } from "@/components/icons";
 
 export function PracticeScreen() {
   const { t } = useLang();
-  const { adapt, busyAdapt, note, poemImage, finishLesson, go } = useApp();
+  const { adapt, assess, busyAdapt, note, poemImage, finishLesson, go } = useApp();
   const { speak, pending } = useSpeak();
 
   const loading = busyAdapt || !adapt;
   const sounds = adapt?.plan.target_sounds ?? [];
+  const practiceWords = adapt?.plan.practice_words ?? [];
+  const focus = assess?.diagnosis?.focus ?? "";
   const poem = adapt?.generated.verse || adapt?.plan.practice_passage || "";
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-10 pt-6 md:max-w-3xl">
+    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-10 pt-6 md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
       {/* header */}
       <div className="flex items-center justify-between">
         <button
@@ -69,6 +71,11 @@ export function PracticeScreen() {
               </>
             ) : (
               <p className="text-base font-bold text-slate-500">{t("poem_why_generic")}</p>
+            )}
+            {focus && (
+              <p className="mt-3 text-sm font-medium text-slate-500">
+                <span className="font-bold text-accent-dark">{t("focus_label")}</span> {focus}
+              </p>
             )}
           </div>
 
@@ -123,6 +130,37 @@ export function PracticeScreen() {
                 </p>
               </div>
             </motion.div>
+          )}
+
+          {/* Tap-to-hear drill words (built from the child's weak sounds) */}
+          {practiceWords.length > 0 && (
+            <div className="card mx-auto max-w-xl p-5 md:p-6">
+              <div className="mb-3 inline-flex items-center gap-1.5 text-base font-bold text-slate-500">
+                <VolumeIcon className="h-5 w-5 text-brand" />
+                {t("practice_words_label")}
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                {practiceWords.map((w, i) => {
+                  const key = `pw-${i}`;
+                  const isLoading = pending === key;
+                  return (
+                    <motion.button
+                      key={key}
+                      type="button"
+                      onClick={() => speak(w, key)}
+                      disabled={isLoading}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.94 }}
+                      dir="rtl"
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-2xl border-b-4 border-brand-dark bg-brand px-4 py-2.5 font-display text-lg font-extrabold text-white transition-[filter] hover:brightness-105 disabled:opacity-70"
+                    >
+                      {isLoading ? <SpinnerIcon className="h-5 w-5" /> : <VolumeIcon className="h-5 w-5" />}
+                      {w}
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
           )}
         </motion.div>
       )}

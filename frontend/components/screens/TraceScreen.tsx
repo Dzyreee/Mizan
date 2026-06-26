@@ -15,7 +15,7 @@ export function TraceScreen() {
     (assess?.trace.total_latency_ms ?? 0) + (adapt?.trace.total_latency_ms ?? 0);
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-10 pt-6 md:max-w-2xl">
+    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-10 pt-6 md:max-w-2xl lg:max-w-3xl">
       <div className="flex items-center justify-between">
         <button
           type="button"

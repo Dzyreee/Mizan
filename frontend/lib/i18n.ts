@@ -143,6 +143,11 @@ const STRINGS = {
     ar: "استخدمت كل تلميحاتك! اقرأها بنفسك الآن.",
     en: "You've used your hints! Now read it yourself.",
   },
+  practice_words_label: {
+    ar: "كلمات للتدرّب · اضغط لسماعها",
+    en: "Practice words · tap to hear",
+  },
+  focus_label: { ar: "نتدرّب على:", en: "Working on:" },
 } as const;
 
 export type StringKey = keyof typeof STRINGS;

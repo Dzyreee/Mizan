@@ -210,7 +210,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setBusyAdapt(true);
     setPoemImage(null);
     try {
-      const ad = await api.adapt(assess.diagnosis, { includeImage: false });
+      const ad = await api.adapt(assess.diagnosis, { includeImage: false, includeAudio: false });
       setAdapt(ad);
       const poem = ad.generated.verse || ad.plan.practice_passage || "";
       if (poem) void pickImage(poem).then(setPoemImage);

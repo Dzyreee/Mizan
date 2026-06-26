@@ -35,7 +35,7 @@ export function PathScreen() {
   );
 
   return (
-    <div className="mx-auto w-full max-w-md px-5 pb-10 pt-6 md:max-w-2xl lg:max-w-5xl">
+    <div className="mx-auto w-full max-w-md px-5 pb-10 pt-6 md:max-w-2xl lg:max-w-5xl xl:max-w-6xl">
       {/* Top stats */}
       <div className="flex items-center justify-between">
         <span className="chip bg-accent/15 text-base text-accent-dark">
@@ -67,9 +67,9 @@ export function PathScreen() {
         </div>
       </div>
 
-      <div className="lg:mt-2 lg:grid lg:grid-cols-[320px_1fr] lg:gap-10">
+      <div className="lg:mt-2 lg:flex lg:justify-center lg:gap-16">
         {/* Left rail (stacks above the trail on mobile) */}
-        <aside className="mt-4 space-y-4 lg:sticky lg:top-6 lg:self-start">
+        <aside className="mt-4 space-y-4 lg:w-80 lg:shrink-0 lg:sticky lg:top-6 lg:self-start">
           <div className="flex items-end gap-3">
             <Mascot size={88} mood="happy" />
             <div className="relative mb-3 flex-1 rounded-[1.25rem] border-2 border-sky-100 bg-white px-4 py-3 shadow-soft">
@@ -82,7 +82,7 @@ export function PathScreen() {
         </aside>
 
         {/* Winding lesson path */}
-        <div className="relative mt-6 flex flex-col items-center gap-7 lg:mt-0 lg:pt-2">
+        <div className="relative mt-6 flex flex-col items-center gap-7 lg:mt-0 lg:w-72 lg:pt-2">
           {lessons.map((l, i) => {
             const state = nodeState(l.id);
             const locked = state === "locked";

@@ -19,7 +19,7 @@ export function ProgressScreen() {
   ];
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-10 pt-6 lg:max-w-4xl">
+    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-5 pb-10 pt-6 lg:max-w-4xl xl:max-w-5xl">
       <div className="flex items-center justify-between">
         <button
           type="button"
