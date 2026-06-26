@@ -36,7 +36,7 @@ ORYX_IVU = "Fanar-Oryx-IVU-2"  # (stretch) set target text from a photographed b
 SHAHEEN = "Fanar-Shaheen-MT-1"  # (stretch) English progress summary for expat parents
 
 # --- FanarGuard / content safety: validate child-facing generated content (Phase 6) ---
-# ⚠️ Phase 0 FINDING: no standalone FanarGuard model/route (/guard -> 404), BUT a
-# POST /moderations endpoint EXISTS (requires a "model" field). That is the likely
-# safety path; its accepted model enum was not resolvable via probe — confirm in Phase 6.
-GUARD = None  # resolve the /moderations model in Phase 6
+# ✅ Phase 6 FINDING (2026-06-24): POST /moderations, model "Fanar-Guard-2", body
+# {model, prompt, response} -> {safety, cultural_awareness} scores (~0-5, higher=safer).
+# Safe kids verse scored 4.44; violent text scored 1.04. See fanar/guard.py.
+GUARD = "Fanar-Guard-2"

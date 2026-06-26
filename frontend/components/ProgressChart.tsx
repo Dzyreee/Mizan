@@ -1,5 +1,6 @@
 "use client";
 import type { Progress, SoundProgress } from "@/lib/types";
+import { useLang } from "./LanguageProvider";
 import { TrendingUpIcon } from "./icons";
 
 const PALETTE = ["#4F46E5", "#F97316", "#059669", "#7C3AED"];
@@ -31,6 +32,7 @@ function Line({ s, color }: { s: SoundProgress; color: string }) {
 }
 
 export function ProgressChart({ progress }: { progress: Progress }) {
+  const { t } = useLang();
   const sounds = progress.sounds;
   const dates = progress.overall.map((o) => o.date);
 
@@ -38,13 +40,13 @@ export function ProgressChart({ progress }: { progress: Progress }) {
     <section className="card p-5 animate-fade-in-up">
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-ink">التقدّم عبر الجلسات</h2>
+          <h2 className="text-lg font-bold text-ink">{t("progress_title")}</h2>
           <p className="text-xs text-slate-500">
-            {progress.name} · {progress.sessions_count} جلسات
+            {progress.name} · {progress.sessions_count} {t("sessions_label")}
           </p>
         </div>
         <span className="chip bg-emerald-50 text-emerald-700">
-          <TrendingUpIcon className="h-4 w-4" /> في تحسّن
+          <TrendingUpIcon className="h-4 w-4" /> {t("improving")}
         </span>
       </div>
 
@@ -102,7 +104,7 @@ export function ProgressChart({ progress }: { progress: Progress }) {
         {sounds.map((s, i) => (
           <span key={s.sound} className="inline-flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: PALETTE[i % PALETTE.length] }} />
-            حرف «{s.sound}»
+            {t("letter_label")} «{s.sound}»
           </span>
         ))}
       </div>

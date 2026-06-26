@@ -1,10 +1,12 @@
 "use client";
 import type { AlignedWord } from "@/lib/types";
+import { useLang } from "./LanguageProvider";
+import type { StringKey } from "@/lib/i18n";
 
-const LEGEND = [
-  { key: "correct", label: "صحيحة", cls: "text-ink" },
-  { key: "substitution", label: "مُستبدَلة", cls: "text-substitution" },
-  { key: "omission", label: "محذوفة", cls: "text-omission" },
+const LEGEND: { key: StringKey; cls: string }[] = [
+  { key: "legend_correct", cls: "text-ink" },
+  { key: "legend_substitution", cls: "text-substitution" },
+  { key: "legend_omission", cls: "text-omission" },
 ];
 
 function WordChip({ w }: { w: AlignedWord }) {
@@ -38,6 +40,7 @@ export function TargetPassage({
   target: string;
   words: AlignedWord[] | null;
 }) {
+  const { t } = useLang();
   return (
     <div>
       <div
@@ -60,7 +63,7 @@ export function TargetPassage({
           {LEGEND.map((l) => (
             <span key={l.key} className="inline-flex items-center gap-1.5">
               <span className={`text-base font-bold ${l.cls}`}>أ</span>
-              {l.label}
+              {t(l.key)}
             </span>
           ))}
         </div>

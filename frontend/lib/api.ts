@@ -73,6 +73,18 @@ export function adapt(
   }).then(asJson<AdaptResult>);
 }
 
+/** Fanar picks the most relevant pre-generated illustration for `text`. */
+export function pickIllustration(
+  text: string,
+  candidates: { id: string; description: string }[],
+): Promise<{ id: string }> {
+  return fetch(`${API_BASE}/pick-illustration`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, candidates }),
+  }).then(asJson<{ id: string }>);
+}
+
 export function getProgress(childId = DEMO_CHILD_ID): Promise<Progress> {
   return fetch(`${API_BASE}/progress?child_id=${encodeURIComponent(childId)}`, {
     cache: "no-store",

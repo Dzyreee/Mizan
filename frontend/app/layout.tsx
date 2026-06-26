@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Baloo_Bhaijaan_2, Tajawal } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/components/LanguageProvider";
+import { AppProvider } from "@/components/AppProvider";
 
 const display = Baloo_Bhaijaan_2({
   subsets: ["arabic"],
@@ -17,15 +19,20 @@ const body = Tajawal({
 });
 
 export const metadata: Metadata = {
-  title: "نغمي · Naghami — رفيق القراءة",
+  title: "نغمي · Naghami — reading companion",
   description:
-    "أداة داعمة لتعليم القراءة العربية للأطفال: تستمع، تحلّل، وتولّد تمارين مخصصة. ليست أداة تشخيص.",
+    "Adaptive Arabic reading-support tutor for children. Listens, analyzes, generates targeted practice. Not a diagnostic tool.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // `lang`/`dir` default to Arabic for SSR; LanguageProvider updates them on the client.
   return (
     <html lang="ar" dir="rtl" className={`${display.variable} ${body.variable}`}>
-      <body>{children}</body>
+      <body>
+        <LanguageProvider>
+          <AppProvider>{children}</AppProvider>
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

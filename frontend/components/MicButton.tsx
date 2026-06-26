@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import { useLang } from "./LanguageProvider";
 import { MicIcon, StopIcon, SpinnerIcon } from "./icons";
 
 type State = "idle" | "recording" | "denied";
@@ -11,6 +12,7 @@ export function MicButton({
   busy: boolean;
   onRecorded: (blob: Blob) => void;
 }) {
+  const { t } = useLang();
   const [state, setState] = useState<State>("idle");
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -45,7 +47,7 @@ export function MicButton({
         type="button"
         disabled={busy}
         onClick={recording ? stop : start}
-        aria-label={recording ? "إيقاف التسجيل" : "ابدأ تسجيل القراءة"}
+        aria-label={recording ? t("mic_aria_stop") : t("mic_aria_start")}
         className={`grid h-20 w-20 cursor-pointer place-items-center rounded-full text-white shadow-soft transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60 ${
           recording ? "bg-rose-500 animate-pulse-glow" : "bg-accent hover:bg-accent-light"
         }`}
@@ -59,10 +61,10 @@ export function MicButton({
         )}
       </button>
       <span className="text-sm font-medium text-slate-600">
-        {busy ? "جارٍ التحليل…" : recording ? "يستمع… اضغط للإيقاف" : "اضغط لقراءة النص"}
+        {busy ? t("mic_analyzing") : recording ? t("mic_listening") : t("mic_idle")}
       </span>
       {state === "denied" && (
-        <span className="text-xs text-rose-500">تعذّر الوصول للميكروفون — جرّب «عرض توضيحي»</span>
+        <span className="text-xs text-rose-500">{t("mic_denied")}</span>
       )}
     </div>
   );

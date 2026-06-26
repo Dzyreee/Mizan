@@ -1,0 +1,36 @@
+# Naghami — one command brings up backend + frontend:  docker compose up --build
+#
+# NOTE ON FANAR + VPN: the backend container calls api.fanar.qa, which is blocked on
+# some networks (pre-auth 403). On macOS, a host VPN does NOT always route Docker
+# container traffic. If the backend logs 403s, either configure your VPN to cover the
+# Docker subnet, or run the backend on the host instead (see README "Run without Docker").
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    # Injects FANAR_API_KEY (and FANAR_BASE_URL) at runtime — never baked into the image.
+    env_file:
+      - ./backend/.env
+    # Persist per-child progress profiles across restarts.
+    volumes:
+      - ./backend/data/profiles:/app/data/profiles
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').getcode()==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Baked into the client bundle — must be the URL the BROWSER uses (host port).
+        NEXT_PUBLIC_API_URL: "http://localhost:8000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped

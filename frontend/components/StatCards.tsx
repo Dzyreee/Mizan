@@ -1,4 +1,6 @@
+"use client";
 import type { ErrorMap } from "@/lib/types";
+import { useLang } from "./LanguageProvider";
 import { CheckIcon, GaugeIcon, BookIcon } from "./icons";
 
 function accuracyTone(pct: number) {
@@ -8,26 +10,27 @@ function accuracyTone(pct: number) {
 }
 
 export function StatCards({ em }: { em: ErrorMap }) {
+  const { t } = useLang();
   const miscues = Object.values(em.counts).reduce((a, b) => a + b, 0);
   const cards = [
     {
-      label: "الدقّة",
+      label: t("stat_accuracy"),
       value: `${em.accuracy_pct}%`,
-      sub: `${em.correct_words} من ${em.total_target_words} كلمة`,
+      sub: `${em.correct_words} ${t("of")} ${em.total_target_words} ${t("words_unit")}`,
       icon: <CheckIcon className="h-5 w-5" />,
       tone: accuracyTone(em.accuracy_pct),
     },
     {
-      label: "سرعة القراءة",
+      label: t("stat_speed"),
       value: em.wpm != null ? `${em.wpm}` : "—",
-      sub: "كلمة/دقيقة",
+      sub: t("stat_speed_sub"),
       icon: <GaugeIcon className="h-5 w-5" />,
       tone: "text-brand",
     },
     {
-      label: "الملاحظات",
+      label: t("stat_notes"),
       value: `${miscues}`,
-      sub: "نقاط للتدرّب",
+      sub: t("stat_notes_sub"),
       icon: <BookIcon className="h-5 w-5" />,
       tone: "text-accent",
     },

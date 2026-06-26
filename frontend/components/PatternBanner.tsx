@@ -1,5 +1,6 @@
 "use client";
 import type { Diagnosis } from "@/lib/types";
+import { useLang } from "./LanguageProvider";
 import { CheckIcon, SparklesIcon, SpinnerIcon, ShieldIcon } from "./icons";
 
 export function PatternBanner({
@@ -9,6 +10,7 @@ export function PatternBanner({
   diagnosis: Diagnosis;
   generating: boolean;
 }) {
+  const { t } = useLang();
   const pattern = diagnosis.patterns?.[0]?.label ?? diagnosis.focus;
   return (
     <section className="overflow-hidden rounded-3xl border border-accent/30 bg-gradient-to-l from-accent/10 via-brand/10 to-brand/5 p-5 shadow-soft animate-fade-in-up">
@@ -17,11 +19,11 @@ export function PatternBanner({
           <CheckIcon className="h-5 w-5" />
         </span>
         <div className="min-w-0 flex-1">
-          <div className="text-xs font-semibold uppercase tracking-wide text-brand">تم اكتشاف النمط</div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-brand">{t("pattern_detected")}</div>
           <p className="mt-0.5 text-lg font-bold text-ink">{pattern}</p>
 
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <span className="text-xs text-slate-500">أصوات للتركيز:</span>
+            <span className="text-xs text-slate-500">{t("sounds_focus")}</span>
             {diagnosis.weak_sounds.map((s) => (
               <span key={s} className="chip bg-white font-bold text-accent">{s}</span>
             ))}
@@ -34,12 +36,12 @@ export function PatternBanner({
           {generating ? (
             <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-sm font-semibold text-brand animate-pulse-glow">
               <SpinnerIcon className="h-4 w-4" />
-              يُولّد تمريناً مخصّصاً لهذه الأصوات…
+              {t("generating")}
             </div>
           ) : (
             <div className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-emerald-600">
               <SparklesIcon className="h-4 w-4" />
-              تمرين مخصّص جاهز بالأسفل
+              {t("exercise_ready")}
             </div>
           )}
         </div>

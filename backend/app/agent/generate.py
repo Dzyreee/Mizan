@@ -14,8 +14,9 @@ from typing import Optional
 
 from app.agent.trace import Trace
 from app.fanar.diwan import generate_verse
+from app.fanar.guard import check_content
 from app.fanar.image import generate_image
-from app.fanar.models import AURA_TTS, DIWAN, ORYX_IG
+from app.fanar.models import AURA_TTS, DIWAN, GUARD, ORYX_IG
 from app.fanar.tts import DEFAULT_VOICE, synthesize
 
 MAX_PRONUNCIATION_WORDS = 5
@@ -30,11 +31,13 @@ def generate_exercise(
     trace: Optional[Trace] = None,
     include_image: bool = True,
     include_audio: bool = True,
+    validate: bool = True,
     voice: str = DEFAULT_VOICE,
 ) -> dict:
-    """Produce verse + illustration + pronunciation audio from a plan."""
+    """Produce verse + illustration + pronunciation audio from a plan, and validate the
+    child-facing text with FanarGuard before returning it (HARD RULE 5)."""
     trace = trace or Trace()
-    out: dict = {"verse": None, "illustration": None, "pronunciations": []}
+    out: dict = {"verse": None, "illustration": None, "pronunciations": [], "safety": None}
 
     # 1) Verse (Diwan -> Fanar fallback). Keep it SHORT + simple: long/advanced verse is
     # both off-target for a 6-8 year old and slow to generate.
@@ -74,5 +77,20 @@ def generate_exercise(
                     {"word": w, "b64": _b64(mp3), "mime": "audio/mpeg", "bytes": len(mp3)})
             st.set_output({"count": len(out["pronunciations"]), "words": words},
                           summary=f"{len(out['pronunciations'])} pronunciation clips")
+
+    # 4) FanarGuard — validate ALL child-facing text before it reaches a child.
+    if validate:
+        child_text = "\n".join(
+            t for t in [out["verse"], plan.get("practice_passage"),
+                        " ".join(plan.get("practice_words") or [])] if t
+        ).strip()
+        with trace.step("safety-check", model=GUARD or "Fanar-Guard-2",
+                        input={"chars": len(child_text)},
+                        summary="FanarGuard validates the child-facing content") as st:
+            out["safety"] = check_content(child_text)
+            verdict = "safe ✓" if out["safety"]["safe"] else "FLAGGED ✗"
+            st.set_output(out["safety"],
+                          summary=f"{verdict} (safety {out['safety']['safety']}, "
+                                  f"cultural {out['safety']['cultural_awareness']})")
 
     return out

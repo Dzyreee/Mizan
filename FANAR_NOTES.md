@@ -142,10 +142,22 @@ and **no dedicated route** (`/diwan`, `/poetry`, `/poems` all 404). **Fallback:*
 sound-loaded output (e.g. a 4-line عصفور/صباح verse dense with **ص**). It's free-verse rhythm,
 **not strict classical meter**. `models.DIWAN = "Fanar"`, `DIWAN_AVAILABLE = False`.
 
-### Content safety — `POST /v1/moderations` exists (model TBD)
-No standalone FanarGuard model/route (`/guard` 404), but **`/moderations` exists** (422
-"model field required"; its enum wasn't resolvable via probe). Likely the FanarGuard path —
-resolve the accepted model in Phase 6.
+### FanarGuard content safety — `POST /v1/moderations` ✅ (Phase 6 confirmed)
+Model **`Fanar-Guard-2`**, body `{model, prompt, response}` → `{safety, cultural_awareness}`
+(floats ~0–5, **higher = safer**). It judges a prompt/response PAIR. Calibration: a gentle
+kids' verse scored safety **4.44** / cultural 4.29; violent text scored **1.04** / 0.94.
+Naghami treats content safe at `safety ≥ 3.0 and cultural ≥ 2.5`. See `fanar/guard.py`.
+
+### Shaheen translation — `POST /v1/translations` ✅ (Phase 6 confirmed)
+`{model: "Fanar-Shaheen-MT-1", text, langpair: "ar-en"}` → `{id, text}`. Clean ar→en output
+(used for the expat-parent English progress summary). NOT OpenAI-shaped → raw httpx.
+
+### Oryx-IVU image understanding — `POST /v1/chat/completions` ✅ (Phase 6 confirmed)
+Model `Fanar-Oryx-IVU-2`, OpenAI vision message shape (`content: [{type:text}, {type:image_url,
+image_url:{url:"data:image/png;base64,..."}}]`). Reads Arabic text from images — used to read a
+book page into the target passage, and in the eval to read back Oryx-IG output. **Eval finding:
+Oryx-IG asked for the letter ص produced "الله"-style calligraphy; IVU read it as `الله`/`ب` —
+confirms Oryx-IG cannot render specific Arabic letters (decorative art only).**
 
 ---
 

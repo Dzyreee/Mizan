@@ -28,6 +28,7 @@ yarn-error.log*
 *.wav
 *.mp3
 backend/smoke/_out/
+backend/eval/_out/
 !docs/**/*.png
 
 # ---- OS / editor ----

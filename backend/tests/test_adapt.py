@@ -26,6 +26,10 @@ def _patch(monkeypatch):
                         lambda prompt, **kw: "صقرٌ صغير\nفوق القصير")
     monkeypatch.setattr(gen_mod, "generate_image", lambda prompt: b"\x89PNGfakebytes")
     monkeypatch.setattr(gen_mod, "synthesize", lambda text, voice=None: b"ID3fakemp3")
+    monkeypatch.setattr(gen_mod, "check_content",
+                        lambda text, **kw: {"safe": True, "safety": 4.4,
+                                            "cultural_awareness": 4.3, "threshold": 3.0,
+                                            "model": "Fanar-Guard-2"})
 
 
 def test_adapt_full_wiring(monkeypatch):
@@ -44,9 +48,12 @@ def test_adapt_full_wiring(monkeypatch):
     assert [p["word"] for p in gen["pronunciations"]] == ["صقر", "عصفور"]
     assert base64.b64decode(gen["pronunciations"][0]["b64"]) == b"ID3fakemp3"
 
-    # trace shows plan -> generate (the loop's second half)
+    # FanarGuard validated the child-facing content
+    assert gen["safety"]["safe"] is True and gen["safety"]["model"] == "Fanar-Guard-2"
+
+    # trace shows plan -> generate -> safety-check (the loop's second half)
     names = [s["name"] for s in result["trace"]["steps"]]
-    assert names == ["plan", "generate-verse", "generate-image", "generate-audio"]
+    assert names == ["plan", "generate-verse", "generate-image", "generate-audio", "safety-check"]
 
 
 def test_adapt_can_skip_media(monkeypatch):
@@ -55,7 +62,7 @@ def test_adapt_can_skip_media(monkeypatch):
     assert result["generated"]["illustration"] is None
     assert result["generated"]["pronunciations"] == []
     names = [s["name"] for s in result["trace"]["steps"]]
-    assert names == ["plan", "generate-verse"]
+    assert names == ["plan", "generate-verse", "safety-check"]
 
 
 def test_adapt_appends_to_shared_trace(monkeypatch):
@@ -63,6 +70,23 @@ def test_adapt_appends_to_shared_trace(monkeypatch):
     trace = Trace()
     with trace.step("diagnose", model="Fanar-C-2-27B"):
         pass
-    adapt({"weak_sounds": ["ص"]}, trace=trace, include_image=False, include_audio=False)
+    adapt({"weak_sounds": ["ص"]}, trace=trace, include_image=False, include_audio=False,
+          validate=False)
     names = [s.name for s in trace.steps]
     assert names == ["diagnose", "plan", "generate-verse"]  # one continuous loop
+
+
+def test_guard_check_content_offline(monkeypatch):
+    import app.fanar.guard as guard
+    # Simulate the live Fanar-Guard-2 response shape.
+    class _Resp:
+        status_code = 200
+        def raise_for_status(self): pass
+        def json(self): return {"safety": 1.0, "cultural_awareness": 0.9}
+    class _Client:
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def post(self, *a, **k): return _Resp()
+    monkeypatch.setattr(guard, "httpx_client", lambda *a, **k: _Client())
+    out = guard.check_content("نص عنيف غير مناسب")
+    assert out["safe"] is False and out["safety"] == 1.0

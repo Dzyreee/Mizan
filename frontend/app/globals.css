@@ -11,8 +11,8 @@
   body {
     @apply bg-canvas text-ink font-body antialiased;
     background-image:
-      radial-gradient(60rem 60rem at 110% -10%, rgba(129, 140, 248, 0.18), transparent 60%),
-      radial-gradient(50rem 50rem at -10% 0%, rgba(249, 115, 22, 0.1), transparent 55%);
+      radial-gradient(60rem 60rem at 110% -10%, rgba(28, 176, 246, 0.14), transparent 60%),
+      radial-gradient(50rem 50rem at -10% 0%, rgba(255, 150, 0, 0.10), transparent 55%);
     background-attachment: fixed;
   }
   h1, h2, h3 {
@@ -21,11 +21,12 @@
 }
 
 @layer components {
+  /* Claymorphic surface: soft, chunky, lightly bordered. */
   .card {
-    @apply rounded-3xl bg-white/90 backdrop-blur shadow-soft border border-indigo-100/70;
+    @apply rounded-[1.75rem] bg-white shadow-soft border-2 border-sky-100;
   }
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold;
   }
   /* Mono for model IDs / latency so Latin reads cleanly inside RTL. */
   .mono {
