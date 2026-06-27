@@ -1,6 +1,6 @@
-# FANAR_NOTES, discovered API facts & findings (Naghami)
+# FANAR_NOTES, discovered API facts & findings (Iqra)
 
-> Phase 0 discovery for **Naghami** completed **2026-06-23** against a live key.
+> Phase 0 discovery for **Iqra** completed **2026-06-23** against a live key.
 > ✅ = confirmed by a smoke test this run. Model IDs live in `backend/app/fanar/models.py`;
 > reproducible probes live in `backend/smoke/` (raw payloads in `smoke/_out/`, gitignored).
 
@@ -37,8 +37,8 @@ a small retry.
 | `POST /audio/speech` (TTS) | `Fanar-Aura-TTS-2`, `Fanar-Sadiq-TTS-1` |
 | `POST /audio/transcriptions` (STT) | (no enum given; `Fanar-Aura-STT-1` / `-LF-1` work) |
 
-### Role mapping for Naghami (what each model does)
-| Naghami job | Model ID | Module | Status |
+### Role mapping for Iqra (what each model does)
+| Iqra job | Model ID | Module | Status |
 |------------|----------|--------|--------|
 | Transcribe child reading | `Fanar-Aura-STT-1` (long-form `-LF-1`) | `fanar/stt.py` | ✅ |
 | Diagnose pattern + plan exercise | `Fanar-C-2-27B` (JSON output) | `fanar/chat.py` | ✅ |
@@ -54,7 +54,7 @@ a small retry.
 ## 🔴 THE FAITHFULNESS GATE, the design-determining result
 
 **Question:** does Aura STT transcribe what the child *actually said* (errors and all), or
-silently "correct" misreadings toward fluent text? Naghami detects errors by diffing the
+silently "correct" misreadings toward fluent text? Iqra detects errors by diffing the
 transcript against a KNOWN target, so this decides the whole strategy.
 
 **Method** (no child recording needed): synthesize a deliberately *misread* version of a
@@ -126,7 +126,7 @@ Round-trip reproduced the Arabic sentence with diacritics.
   re-verified:**
   - **Arabic** (`languages: ['ar']`): **Noor, Huda, Radwa** (F) · **Jasim, Hamad, Abdulrahman** (M)
   - **English** (British accent): Amelia, Emily (F) · Harry, Jake (M)
-  - Naghami default = **Noor** (warm female Arabic). Fields per voice: `name, name_ar, gender,
+  - Iqra default = **Noor** (warm female Arabic). Fields per voice: `name, name_ar, gender,
     accent, languages, type, emotion`.
 
 ### Image gen, `POST /v1/images/generations` ✅ (OpenAI shape)
@@ -146,7 +146,7 @@ sound-loaded output (e.g. a 4-line عصفور/صباح verse dense with **ص**).
 Model **`Fanar-Guard-2`**, body `{model, prompt, response}` → `{safety, cultural_awareness}`
 (floats ~0–5, **higher = safer**). It judges a prompt/response PAIR. Calibration: a gentle
 kids' verse scored safety **4.44** / cultural 4.29; violent text scored **1.04** / 0.94.
-Naghami treats content safe at `safety ≥ 3.0 and cultural ≥ 2.5`. See `fanar/guard.py`.
+Iqra treats content safe at `safety ≥ 3.0 and cultural ≥ 2.5`. See `fanar/guard.py`.
 
 ### Shaheen translation, `POST /v1/translations` ✅ (Phase 6 confirmed)
 `{model: "Fanar-Shaheen-MT-1", text, langpair: "ar-en"}` → `{id, text}`. Clean ar→en output

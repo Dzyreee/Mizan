@@ -1,4 +1,4 @@
-"""Naghami agent layer: the verifiable pipeline that turns a child's reading into an
+"""Iqra agent layer: the verifiable pipeline that turns a child's reading into an
 assessment, a diagnosis, and (Phase 3) an adaptive exercise, each step recorded in a
 structured Trace so the whole reasoning process is inspectable in the UI.
 

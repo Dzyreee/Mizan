@@ -1,4 +1,4 @@
-// Types mirroring the Naghami FastAPI backend payloads.
+// Types mirroring the Iqra FastAPI backend payloads.
 
 export type WordStatus = "correct" | "substitution" | "omission";
 

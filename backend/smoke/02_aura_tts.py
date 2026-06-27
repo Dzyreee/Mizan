@@ -1,5 +1,5 @@
 """Smoke test: Aura TTS + RE-VERIFY the available voices (the prior project's voice
-list is treated as unconfirmed for Naghami). Produces _out/02_tts.wav.
+list is treated as unconfirmed for Iqra). Produces _out/02_tts.wav.
 Run: python smoke/02_aura_tts.py
 """
 import _common as c

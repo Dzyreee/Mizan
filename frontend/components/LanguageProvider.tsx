@@ -17,7 +17,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   // Restore saved choice on mount.
   useEffect(() => {
-    const saved = localStorage.getItem("naghami-lang") as Lang | null;
+    const saved = localStorage.getItem("iqra-lang") as Lang | null;
     if (saved === "ar" || saved === "en") setLangState(saved);
   }, []);
 
@@ -25,7 +25,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = dirOf(lang);
-    localStorage.setItem("naghami-lang", lang);
+    localStorage.setItem("iqra-lang", lang);
   }, [lang]);
 
   const setLang = (l: Lang) => setLangState(l);

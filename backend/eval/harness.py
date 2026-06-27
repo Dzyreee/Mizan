@@ -1,4 +1,4 @@
-"""Naghami evaluation harness, logs CONCRETE Fanar findings for the four questions in
+"""Iqra evaluation harness, logs CONCRETE Fanar findings for the four questions in
 the brief, then writes eval/findings.json + eval/REPORT.md (which the README cites).
 
   1. Did Aura preserve a child's reading errors (or normalize them away)?
@@ -193,7 +193,7 @@ def _write_report(findings: list, meta: dict) -> None:
         json.dumps({"meta": meta, "findings": findings}, ensure_ascii=False, indent=2),
         encoding="utf-8")
 
-    lines = ["# Naghami, Fanar Evaluation Findings", "",
+    lines = ["# Iqra, Fanar Evaluation Findings", "",
              f"_Run {meta['date']} · {meta['checks_run']} checks · "
              f"{meta['total_sec']}s total._", ""]
     for f in findings:

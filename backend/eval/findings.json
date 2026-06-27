@@ -97,7 +97,7 @@
         "ivu_readback": "ب",
         "legible": false,
         "image_bytes": 420583,
-        "image_saved": "/Users/yacine/Desktop/Naghami/backend/eval/_out/eval_oryx_letter.png"
+        "image_saved": "/Users/yacine/Desktop/Iqra/backend/eval/_out/eval_oryx_letter.png"
       },
       "recommendation": "Oryx-IG is unreliable for exact Arabic letterforms, keep it to decorative art and render all reading text in the app's font layer (we already do).",
       "latency_ms": 7714

@@ -1,12 +1,12 @@
-# نَغَمي · Naghami, an adaptive Arabic reading tutor for children
+# اقرأ · Iqra, an adaptive Arabic reading tutor for children
 
-> **Naghami is a reading-SUPPORT tool, not a diagnostic tool.** It helps every child
+> **Iqra is a reading-SUPPORT tool, not a diagnostic tool.** It helps every child
 > practice and improves reading, and it can surface early error *patterns* for a parent to
 > discuss with a professional. It never claims to diagnose dyslexia or any condition, never
 > outputs a clinical label, and never tells a parent their child "has" anything. Flags are
 > always phrased as *"patterns worth checking with a specialist."*
 
-Built for the **Fanar Hackathon 2026**. A child reads a known passage aloud; Naghami
+Built for the **Fanar Hackathon 2026**. A child reads a known passage aloud; Iqra
 transcribes the reading, compares it against the known target text to find exactly which
 words and sounds they struggled with, diagnoses the pattern, then generates a targeted,
 illustrated practice exercise for those sounds and models the correct pronunciation. Over
@@ -21,7 +21,7 @@ intimidating, especially in Arabic, with its emphatic consonants (ص ض ط ظ), 
 diacritics, and rich morphology. Parents have no everyday way to know *which sounds* their
 child struggles with, or whether practice is helping.
 
-Naghami gives every child fun, targeted reading practice **and** gives parents an honest,
+Iqra gives every child fun, targeted reading practice **and** gives parents an honest,
 non-clinical view of recurring error patterns over time, the kind of concrete signal that
 makes a conversation with a specialist productive, without ever pretending to be one.
 
@@ -58,7 +58,7 @@ deterministic alignment is the foundation of the whole app.
 
 **The separation is the design (HARD RULE):** the deterministic engine *owns* the error map;
 the LLM only *reasons on top of it* (diagnose / plan). The alignment and miscue classification
-are never done by an LLM, they're pure, unit-tested Python. This makes Naghami auditable and
+are never done by an LLM, they're pure, unit-tested Python. This makes Iqra auditable and
 keeps error detection trustworthy.
 
 ### Repository layout
@@ -131,7 +131,7 @@ Native tool-calling is **not authorized** on our key (Phase 0 finding), so every
 
 ## 5. Use of Fanar models + external tools
 
-| Fanar model | Role in Naghami | Notes |
+| Fanar model | Role in Iqra | Notes |
 |-------------|-----------------|-------|
 | `Fanar-Aura-STT-1` | transcribe the child's reading (core input) | no usable timestamps → WPM from local audio |
 | `Fanar-C-2-27B` | diagnose pattern + plan exercise | JSON output; honest-framing prompt + code-level scrub |

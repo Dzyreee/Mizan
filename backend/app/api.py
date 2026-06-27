@@ -1,4 +1,4 @@
-"""Naghami FastAPI backend.
+"""Iqra FastAPI backend.
 
 Run from backend/:  .venv/bin/uvicorn app.api:app --reload --port 8000
 """
@@ -16,7 +16,7 @@ from app.agent.adapt import adapt
 from app.agent.assess import assess
 from app.memory import build_progress, load_profile, record_session
 
-app = FastAPI(title="Naghami API",
+app = FastAPI(title="Iqra API",
               description="Adaptive Arabic reading-support tutor for children.")
 
 # Dev-friendly CORS for the Next.js frontend.
@@ -30,7 +30,7 @@ app.add_middleware(
 
 @app.get("/health")
 def health() -> dict:
-    return {"status": "ok", "service": "naghami"}
+    return {"status": "ok", "service": "iqra"}
 
 
 @app.post("/assess")

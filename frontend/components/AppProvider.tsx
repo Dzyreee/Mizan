@@ -34,7 +34,7 @@ interface Game {
   childName: string;
 }
 
-const GAME_KEY = "naghami-game";
+const GAME_KEY = "iqra-game";
 const DEFAULT_GAME: Game = {
   completed: [],
   streak: 0,

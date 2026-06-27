@@ -34,7 +34,7 @@ def _show(title, target, transcript, **kw):
 
 
 def main():
-    print("Naghami engine demo, legend: "
+    print("Iqra engine demo, legend: "
           f"{_C['correct']}correct{_C['reset']} "
           f"{_C['substitution']}substitution{_C['reset']} "
           f"{_C['omission']}omission{_C['reset']}")

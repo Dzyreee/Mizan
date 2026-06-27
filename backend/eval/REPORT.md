@@ -1,4 +1,4 @@
-# Naghami, Fanar Evaluation Findings
+# Iqra, Fanar Evaluation Findings
 
 _Run 2026-06-24 · 4 checks · 23.7s total._
 
@@ -125,7 +125,7 @@ _Run 2026-06-24 · 4 checks · 23.7s total._
   "ivu_readback": "ب",
   "legible": false,
   "image_bytes": 420583,
-  "image_saved": "/Users/yacine/Desktop/Naghami/backend/eval/_out/eval_oryx_letter.png"
+  "image_saved": "/Users/yacine/Desktop/Iqra/backend/eval/_out/eval_oryx_letter.png"
 }
 ```
 

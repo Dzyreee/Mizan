@@ -68,7 +68,7 @@ def main() -> None:
         from app.fanar.tts import synthesize
         print(f"Synthesizing a misread of: {args.target}")
         print(f"  (spoken as)            : {DEMO_MISREAD}")
-        audio = Path(tempfile.gettempdir()) / "naghami_demo_misread.mp3"
+        audio = Path(tempfile.gettempdir()) / "iqra_demo_misread.mp3"
         audio.write_bytes(synthesize(DEMO_MISREAD, voice="Noor"))
         print(f"  wrote {audio} ({audio.stat().st_size} bytes)")
         result = assess(args.target, audio_path=audio)

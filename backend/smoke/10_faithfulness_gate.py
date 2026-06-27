@@ -1,6 +1,6 @@
 """THE CRITICAL TEST, the Aura STT faithfulness gate.
 
-Naghami detects reading errors by comparing a transcript of the child to a KNOWN
+Iqra detects reading errors by comparing a transcript of the child to a KNOWN
 target text. That only works if Aura STT transcribes what was ACTUALLY said,
 errors and all, i.e. it must NOT silently "correct" misreadings toward fluent text.
 
@@ -14,7 +14,7 @@ How we test it without a child recording:
   then transcribe it with Aura STT and check, per error, whether the transcript kept
   the MISREAD form (FAITHFUL = good) or snapped back to the TARGET form (NORMALIZED = bad).
 
-Verdict decides Naghami's whole error-detection strategy (Phase 1):
+Verdict decides Iqra's whole error-detection strategy (Phase 1):
   - FAITHFUL  -> substitutions are trustworthy; use full miscue classification.
   - NORMALIZED-> lean on omissions/insertions/timing signals that survive normalization.
 

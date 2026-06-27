@@ -43,7 +43,7 @@ def main() -> None:
 
     # 1-2-3) assess + diagnose (synthesize a misread first so STT has audio).
     from app.fanar.tts import synthesize
-    audio = Path(tempfile.gettempdir()) / "naghami_loop.mp3"
+    audio = Path(tempfile.gettempdir()) / "iqra_loop.mp3"
     audio.write_bytes(synthesize(MISREAD, voice="Noor"))
     assessment = assess(TARGET, audio_path=audio, trace=trace)
     diagnosis = assessment["diagnosis"]

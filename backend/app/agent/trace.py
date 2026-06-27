@@ -1,6 +1,6 @@
 """A structured, serializable Trace of the pipeline, model used, latency, input and
 output for every step. This is what the frontend's live "Agent Trace" panel renders,
-and what makes Naghami auditable rather than a black box.
+and what makes Iqra auditable rather than a black box.
 """
 from __future__ import annotations
 

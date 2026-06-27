@@ -3,7 +3,7 @@
 Diwan was not used by the prior project and is not in GET /v1/models, so we try a
 prioritized list of candidate ids against the chat endpoint, and for the first that
 works we generate a short, child-friendly verse LOADED with a target sound (the
-emphatic letter ص), which is exactly Naghami's use case. Records the winning id +
+emphatic letter ص), which is exactly Iqra's use case. Records the winning id +
 output so FANAR_NOTES.md and models.DIWAN can be updated.
 
 Run: python smoke/04_diwan.py
@@ -13,7 +13,7 @@ from app.fanar.client import openai_client
 
 CANDIDATES = ["Fanar-Diwan", "Diwan", "Fanar-Diwan-1", "Fanar-Poetry", "Fanar"]
 
-# Naghami-style prompt: kid verse drilling a weak sound.
+# Iqra-style prompt: kid verse drilling a weak sound.
 PROMPT = (
     "اكتب بيتين من الشعر العربي البسيط لطفل عمره ٧ سنوات، "
     "بإيقاع واضح، وأكثِر من حرف الصاد (ص) في الكلمات، "

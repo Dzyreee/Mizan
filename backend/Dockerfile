@@ -1,4 +1,4 @@
-# Naghami backend, FastAPI + Fanar clients.
+# Iqra backend, FastAPI + Fanar clients.
 FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1 \

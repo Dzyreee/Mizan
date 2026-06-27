@@ -1,4 +1,4 @@
-"""Naghami deterministic read-aloud engine (HARD RULE 3: pure Python, NO LLM).
+"""Iqra deterministic read-aloud engine (HARD RULE 3: pure Python, NO LLM).
 
 Given a KNOWN target passage and a transcript of the child reading it, this package
 computes a fully deterministic error map: word-level alignment, miscue classification

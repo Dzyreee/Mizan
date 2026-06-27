@@ -1,4 +1,4 @@
-# Naghami frontend, Next.js (standalone output) multi-stage build.
+# Iqra frontend, Next.js (standalone output) multi-stage build.
 
 # ---- deps ----
 FROM node:20-alpine AS deps

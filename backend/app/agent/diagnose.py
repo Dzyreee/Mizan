@@ -1,7 +1,7 @@
 """DIAGNOSE step: Fanar-27B names the reading PATTERN by reasoning over the engine's
 deterministic error map (JSON output). It does NOT recompute anything (HARD RULE 3).
 
-Honest framing is enforced in the system prompt AND defended in code: Naghami is a
+Honest framing is enforced in the system prompt AND defended in code: Iqra is a
 reading-SUPPORT tool, never a diagnostic one, no clinical labels, ever.
 """
 from __future__ import annotations

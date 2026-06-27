@@ -13,7 +13,7 @@ export function Header({ online }: { online: boolean | null }) {
         </div>
         <div>
           <h1 className="text-2xl font-extrabold leading-none text-ink">
-            نَغَمي <span className="text-base font-semibold text-brand mono">Naghami</span>
+            اقرأ <span className="text-base font-semibold text-brand mono">Iqra</span>
           </h1>
           <p className="mt-1 text-sm text-slate-600">{t("tagline")}</p>
         </div>

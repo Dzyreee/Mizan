@@ -1,4 +1,4 @@
-# Naghami Phase 5 Redesign, Design Spec
+# Iqra Phase 5 Redesign, Design Spec
 
 Date: 2026-06-26
 Status: Built (v1 shipped); **Revision 2 (4 refinements), implemented 2026-06-26**
@@ -16,7 +16,7 @@ Status: Built (v1 shipped); **Revision 2 (4 refinements), implemented 2026-06-26
 
 ## Goal
 
-Redesign the Naghami frontend to feel like a real consumer kids' app (Duolingo as
+Redesign the Iqra frontend to feel like a real consumer kids' app (Duolingo as
 **structural/interaction** inspiration only, original visuals, mascot, palette). Multi-screen
 flow, no auth, one hardcoded child profile ("Layla, age 7"). Wire to existing backend
 endpoints `/assess`, `/adapt`, `/progress` (+ small new Fanar-backed helpers, see below).

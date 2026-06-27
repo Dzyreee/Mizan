@@ -1,4 +1,4 @@
-# Naghami, one command brings up backend + frontend:  docker compose up --build
+# Iqra, one command brings up backend + frontend:  docker compose up --build
 #
 # NOTE ON FANAR + VPN: the backend container calls api.fanar.qa, which is blocked on
 # some networks (pre-auth 403). On macOS, a host VPN does NOT always route Docker

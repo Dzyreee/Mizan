@@ -1,4 +1,4 @@
-"""Aura STT: transcribe the child reading aloud. This is the core input to Naghami.
+"""Aura STT: transcribe the child reading aloud. This is the core input to Iqra.
 
 Endpoint is OpenAI-shaped: client.audio.transcriptions.create(model=..., file=...).
 The transcript is fed VERBATIM into the deterministic alignment engine, so we must

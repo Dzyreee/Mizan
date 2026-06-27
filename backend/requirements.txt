@@ -1,4 +1,4 @@
-# Naghami backend dependencies
+# Iqra backend dependencies
 openai>=1.40.0          # OpenAI-compatible SDK, pointed at the Fanar base_url
 httpx>=0.27.0           # for endpoints that are NOT OpenAI-shaped (/models, /audio/voices)
 python-dotenv>=1.0.1    # load FANAR_API_KEY from backend/.env at runtime

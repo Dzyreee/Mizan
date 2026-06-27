@@ -1,6 +1,6 @@
 # Fanar smoke + discovery suite (Phase 0)
 
-Tiny scripts that prove each Fanar capability Naghami needs and discover the unknowns.
+Tiny scripts that prove each Fanar capability Iqra needs and discover the unknowns.
 Findings are written up in the repo-root `FANAR_NOTES.md`; raw payloads land in
 `_out/` (gitignored).
 

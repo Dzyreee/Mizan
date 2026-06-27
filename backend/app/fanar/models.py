@@ -1,8 +1,8 @@
-"""Fanar model IDs for Naghami, single source of truth.
+"""Fanar model IDs for Iqra, single source of truth.
 
 Most IDs were confirmed via live discovery on 2026-06-20 (salvaged from a prior
 project). Items marked ⚠️ TBD were NOT used before and MUST be confirmed live in
-Naghami's Phase 0 (see smoke/00b_probe.py, smoke/02_aura_tts.py, smoke/04_diwan.py):
+Iqra's Phase 0 (see smoke/00b_probe.py, smoke/02_aura_tts.py, smoke/04_diwan.py):
   - DIWAN model id (not present in GET /v1/models)
   - TTS voice names (re-verified against GET /v1/audio/voices)
 """
