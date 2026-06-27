@@ -68,15 +68,46 @@ backend/
     engine/      # ★ deterministic alignment + miscue engine (pure Python, no LLM)
     fanar/       # one module per Fanar model: stt, tts, chat, diwan, image, guard,
                  #   translate (Shaheen), vision (Oryx-IVU), each demoable in isolation
-    agent/       # trace, diagnose, plan, generate, assess, adapt  (the agentic loop)
+    agent/       # assess, diagnose, plan, generate, adapt, pick_image, trace (agentic loop)
     memory/      # per-child JSON profiles + deterministic per-sound progress
-    api.py       # FastAPI: /assess /adapt /progress /progress/summary /read-page /health
+    api.py       # FastAPI: /assess /adapt /speak /pick-illustration /progress /read-page /health
+  scripts/       # one-off tooling: gen_library (Oryx-IG art), seed_progress, demo_*
   eval/          # evaluation harness → findings.json + REPORT.md
   smoke/         # Fanar discovery + faithfulness scripts
-  tests/         # 34 unit/integration tests (pytest)
-frontend/        # Next.js (App Router) + Tailwind two-panel RTL UI
+  tests/         # 36 unit/integration tests (pytest, no network)
+frontend/        # Next.js (App Router) + Tailwind — multi-screen kids web app (RTL, AR/EN)
+  components/    #   screens (Path/Session/Results/Practice/Progress/Trace) + Jad mascot + UI
+  public/
+    library/     #   pre-generated illustration library (Fanar picks the best match at runtime)
+    jad-images/  #   the Jad mascot art set
 FANAR_NOTES.md   # every discovered Fanar API fact, shape, and quirk
+docs/            # design specs (incl. the Phase 5 kids-app redesign)
 ```
+
+### Frontend experience (what the judges click through)
+
+A single-page **Next.js** app styled as a friendly, **Duolingo-inspired** kids' app — original
+visuals, mascot (**Jad**), and a "Playful Sky" palette. Arabic-first **RTL** with a one-tap **EN**
+toggle, fully **responsive** (mobile → tablet → desktop). No login; one demo child ("Layla, 7").
+Six animated screens:
+
+1. **Path** — a winding level map (done = star, current pulses, future locked) with a streak chip,
+   a **Level badge** (level + progress bar), stars, and the mascot greeting.
+2. **Session** — the child reads a passage aloud (mic) or runs a no-mic **demo**. The passage sits
+   in one card **beside its illustration**. Each word is **tappable for a pronunciation hint**
+   (Aura TTS), capped at 2 per lesson so it never reads the whole line for them.
+3. **Results** — accuracy, words/min, and the tricky sounds. A good read fires **confetti + a
+   cheering mascot**; a struggle shows a gentle, never-negative "let's practice together" state.
+4. **Practice** — a Diwan-style **verse built from the child's weak sounds**, shown beside a
+   matching illustration, with a **full-verse play** button (the reward).
+5. **Progress** — per-sound improvement chart across sessions (real `/progress` data) + streak /
+   sessions / stars tiles.
+6. **How it works** (hidden) — the full **agent trace**: every step's model, latency, and I/O.
+
+**Illustrations** use the pre-generated `public/library` set; at runtime Fanar **picks** the
+best-matching image for the passage/verse (a fast text call), with a deterministic keyword
+fallback so images still match if the model is offline. The UI degrades gracefully — it renders
+from sample data with the backend off and never blocks on a single failed call.
 
 ## 4. Agentic workflow design
 
@@ -105,7 +136,7 @@ Native tool-calling is **not authorized** on our key (Phase 0 finding), so every
 | `Fanar-Aura-STT-1` | transcribe the child's reading (core input) | no usable timestamps → WPM from local audio |
 | `Fanar-C-2-27B` | diagnose pattern + plan exercise | JSON output; honest-framing prompt + code-level scrub |
 | `Fanar` | practice **verse** (Diwan fallback) | **no Diwan model exists on the key**, see §7 |
-| `Fanar-Oryx-IG-2` | illustrate exercises | decorative only, cannot render exact Arabic letters |
+| `Fanar-Oryx-IG-2` | pre-generate the illustration **library**; Fanar then *picks* the best match per text | decorative only, cannot render exact Arabic letters |
 | `Fanar-Aura-TTS-2` | pronounce hard words | returns **MP3** (not WAV); 10 named voices |
 | `Fanar-Guard-2` | validate child-facing content | `safety` + `cultural_awareness` scores (0–5) |
 | `Fanar-Shaheen-MT-1` | English progress summary for expat parents | `/translations` endpoint |
@@ -148,16 +179,26 @@ Run `cd backend && .venv/bin/python -m eval.harness` → `eval/REPORT.md` + `eva
 
 ## 8. Setup & run
 
-**Prereqis:** Python 3.x, Node 18+, a Fanar API key, and network access to `api.fanar.qa`
-(VPN/5G hotspot if your WiFi returns a pre-auth 403).
+**Prerequisites:** Python 3.11+, Node 18+, a Fanar API key, and network access to `api.fanar.qa`
+(VPN/5G hotspot if your WiFi returns a pre-auth 403). Put your key in `backend/.env` (see below) —
+it is the only secret, is gitignored, and is never printed.
 
+### Option A — Docker (one command)
+```bash
+cp backend/.env.example backend/.env     # add your FANAR_API_KEY
+docker compose up --build                # frontend → http://localhost:3000, backend → :8000
+```
+> Note: on macOS a host VPN may not route Docker traffic to `api.fanar.qa`. If the backend logs
+> 403s, run it on the host instead (Option B).
+
+### Option B — Run locally
 ```bash
 # ── backend ──
 cd backend
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env            # then put your FANAR_API_KEY in .env
-pytest                          # 34 tests, no network
+pytest                          # 36 tests, no network
 uvicorn app.api:app --reload --port 8000
 
 # ── frontend (new terminal) ──
@@ -167,14 +208,21 @@ npm run dev                     # http://localhost:3000
 ```
 
 The UI renders fully from sample data even with the backend off; the mic and **عرض توضيحي**
-(demo) buttons call the live backend when it's running. Seed the demo progress with
-`cd backend && .venv/bin/python -m scripts.seed_progress`.
+(demo) buttons call the live backend when it's running. Optional one-off scripts:
+
+```bash
+cd backend && . .venv/bin/activate
+python -m scripts.seed_progress         # seed the demo child's progress history
+python -m scripts.gen_library           # (re)generate the illustration library via Oryx-IG
+```
 
 ### Endpoints
 | Method | Path | Purpose |
 |--------|------|---------|
 | POST | `/assess` | audio/transcript → error map + diagnosis + trace (records session if `child_id`) |
 | POST | `/adapt` | diagnosis → planned exercise (verse + art + audio) + FanarGuard + trace |
+| POST | `/speak` | text → base64 MP3 (Aura TTS) — full-verse playback + per-word reading hints |
+| POST | `/pick-illustration` | text + candidates → best-match library image id (Fanar pick, keyword fallback) |
 | GET | `/progress?child_id=` | per-sound trend across sessions |
 | GET | `/progress/summary?child_id=&lang=en` | parent summary (Shaheen translates to English) |
 | POST | `/read-page` | photo of a book page → target text (Oryx-IVU) |

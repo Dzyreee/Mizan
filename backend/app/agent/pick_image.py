@@ -8,6 +8,8 @@ so the reading flow never blocks on this.
 """
 from __future__ import annotations
 
+import re
+
 from app.fanar.chat import complete_json
 
 _SYSTEM = (
@@ -17,9 +19,37 @@ _SYSTEM = (
     'Return ONLY JSON: {"id": "<one id from the list>"}. No prose, no extra keys.'
 )
 
+# Very common Arabic function words — ignored so matching keys on real content nouns.
+_STOP = {"في", "إلى", "على", "من", "عن", "مع", "هذا", "هذه", "ذلك", "التي", "الذي",
+         "كل", "قد", "أن", "إن", "ما", "لا", "هو", "هي", "أو", "ثم", "كان", "كانت"}
+
+
+def _tokens(s: str) -> set[str]:
+    """Arabic content tokens, with the definite article «ال» stripped so المدرسة≈مدرسة."""
+    out = set()
+    for w in re.findall(r"[؀-ۿ]+", s):
+        if w.startswith("ال") and len(w) > 4:
+            w = w[2:]
+        if len(w) >= 3 and w not in _STOP:
+            out.add(w)
+    return out
+
+
+def _keyword_pick(text: str, candidates: list[dict], ids: list[str]) -> str:
+    """Deterministic fallback when Fanar is unavailable: choose the candidate whose
+    description shares the most content words with the text. Ties keep list order."""
+    tt = _tokens(text)
+    best_id, best_score = ids[0], 0
+    for c in candidates:
+        score = len(tt & _tokens(c.get("description", "")))
+        if score > best_score:
+            best_id, best_score = c["id"], score
+    return best_id
+
 
 def pick_image(text: str, candidates: list[dict]) -> str:
-    """Return the id of the best-matching candidate. Falls back to the first on any issue."""
+    """Return the id of the best-matching candidate. Uses Fanar to pick; on any Fanar
+    error degrades to deterministic keyword matching (never blocks the reading flow)."""
     if not candidates:
         raise ValueError("No candidates provided.")
     ids = [c["id"] for c in candidates]
@@ -28,6 +58,6 @@ def pick_image(text: str, candidates: list[dict]) -> str:
     try:
         parsed, _raw = complete_json(_SYSTEM, user, max_tokens=60)
         choice = str(parsed.get("id", "")).strip()
-        return choice if choice in ids else ids[0]
+        return choice if choice in ids else _keyword_pick(text, candidates, ids)
     except Exception:  # noqa: BLE001
-        return ids[0]
+        return _keyword_pick(text, candidates, ids)

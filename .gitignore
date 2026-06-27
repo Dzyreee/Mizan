@@ -30,6 +30,8 @@ yarn-error.log*
 backend/smoke/_out/
 backend/eval/_out/
 !docs/**/*.png
+# UI assets are part of the app — keep them in the repo (mascot art + illustration library).
+!frontend/public/**/*.png
 
 # ---- OS / editor ----
 .DS_Store
